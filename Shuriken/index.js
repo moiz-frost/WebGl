@@ -1,4 +1,3 @@
-
 // Vertex Shader Source Code
 var vertexShaderText =
     [
@@ -114,7 +113,7 @@ var init = function () {
     }
 
 
-    var offset = 0.05;
+    var offset = 0.0;
     // Define vertices = 64 bit floating point precision, because our attribute is vec3 (takes 3 values of x, y, z)
     var trianglePoints =
         [// xyzrgb
@@ -235,7 +234,7 @@ var init = function () {
     var identityMatrix = new Float32Array(16);
     mat4.identity(identityMatrix);
     var loop = function () {
-        mat4.rotate(worldMatrix, identityMatrix, rotationAngle++/30, [1, 1, 1]); // rotating the world matrix about identity matrix, about x, y, and z axis
+        mat4.rotate(worldMatrix, identityMatrix, rotationAngle++/30, [0, 0, 1]); // rotating the world matrix about identity matrix, about x, y, and z axis
         gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix); // Send updates values to the GPU
         gl.clearColor(0.6, 0.6, 0.6, 1.0); // RGBA
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // color Buffer & depth buffer
