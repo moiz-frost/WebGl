@@ -59,6 +59,8 @@ var init = function () {
 
     gl.clearColor(0.8, 0.5, 1.0, 1.0); // RGBA
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // color Buffer & depth buffer
+    gl.enable(gl.DEPTH_TEST);
+
 
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderText); // create a vertex shader
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderText); // create fragment shader
@@ -234,7 +236,7 @@ var init = function () {
     var identityMatrix = new Float32Array(16);
     mat4.identity(identityMatrix);
     var loop = function () {
-        mat4.rotate(worldMatrix, identityMatrix, rotationAngle++/30, [0, 0, 1]); // rotating the world matrix about identity matrix, about x, y, and z axis
+        mat4.rotate(worldMatrix, identityMatrix, rotationAngle++/30, [1, 1, 1]); // rotating the world matrix about identity matrix, about x, y, and z axis
         gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix); // Send updates values to the GPU
         gl.clearColor(0.6, 0.6, 0.6, 1.0); // RGBA
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // color Buffer & depth buffer

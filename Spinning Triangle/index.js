@@ -83,8 +83,8 @@ var init = function () {
     mat4.identity(projMatrix); // converts 1D array into a 4x4 matrix, returns identity matrix by default
 
     mat4.identity(worldMatrix);
-    mat4.lookAt(viewMatrix, [0.0, 0.0, 3.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]); //output variable, eye location, center, up axis
-    mat4.perspective(projMatrix, glMatrix.toRadian(45), (canvas.width/canvas.height), 0.1, 1000.0);
+    mat4.lookAt(viewMatrix, [0.0, 0.0, 3.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]); // output variable, eye location, center, up axis
+    mat4.perspective(projMatrix, glMatrix.toRadian(45), (canvas.width/canvas.height), 0.1, 1000.0); // output variable, viewing angle, aspect ratio, near, far
 
     gl.uniformMatrix4fv( // Basically sending data to the GPU
         matWorldUniformLocation,
@@ -149,10 +149,10 @@ var init = function () {
 
     // Main render loop
     var rotationAngle = 0; // angle of rotation
-    var identityMatrix = new Float32Array(16);
+    var originMatrix = new Float32Array(16); // origin matrix to rotate about
     mat4.identity(identityMatrix);
     var loop = function () {
-        mat4.rotate(worldMatrix, identityMatrix, rotationAngle++/10, [0, 1, 0]); // rotating the world matrix about identity matrix, about x, y, and z axis
+        mat4.rotate(worldMatrix, originMatrix, rotationAngle++/10, [0, 1, 0]); // rotating the world matrix about identity matrix, about x, y, and z axis
         gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix); // Send updates values to the GPU
         gl.clearColor(0.6, 0.6, 0.6, 1.0); // RGBA
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // color Buffer & depth buffer
