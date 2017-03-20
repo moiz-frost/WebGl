@@ -2,7 +2,7 @@
 // Vertex Shader Source Code
 var vertexShaderText =
     [
-        'precision mediump float;',
+        'precision mediump float;', // medium precision
         '',
         'attribute vec3 vertPosition;', // position vector
         '',
@@ -150,7 +150,7 @@ var init = function () {
     // Main render loop
     var rotationAngle = 0; // angle of rotation
     var originMatrix = new Float32Array(16); // origin matrix to rotate about
-    mat4.identity(identityMatrix);
+    mat4.identity(originMatrix);
     var loop = function () {
         mat4.rotate(worldMatrix, originMatrix, rotationAngle++/10, [0, 1, 0]); // rotating the world matrix about identity matrix, about x, y, and z axis
         gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix); // Send updates values to the GPU
