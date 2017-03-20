@@ -1,4 +1,12 @@
 // Vertex Shader Source Code
+
+var x = 0.0;
+var y = 0.0;
+var z = 5.0;
+
+var mouseXPosition = 0;
+var mouseYPosition = 0;
+
 var vertexShaderText =
     [
         'precision mediump float;',
@@ -43,8 +51,8 @@ var fragmentShaderText =
     ].join('\n');
 
 // Initializer Function - Runs once every time the page loads
+var canvas = document.getElementById('surface');
 var init = function () {
-    var canvas = document.getElementById('surface');
     canvas.width = 800;
     canvas.height = 800;
     var gl = canvas.getContext('webgl'); // gets the opengl context that we are going to work on
@@ -84,7 +92,6 @@ var init = function () {
     mat4.identity(projMatrix); // converts 1D array into a 4x4 matrix, returns identity matrix by default
 
     mat4.identity(worldMatrix);
-    mat4.lookAt(viewMatrix, [0.0, 0.0, 3.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]); //output variable, eye location, center, up axis
     mat4.perspective(projMatrix, glMatrix.toRadian(45), (canvas.width/canvas.height), 0.1, 1000.0);
 
     gl.uniformMatrix4fv( // Basically sending data to the GPU
@@ -93,11 +100,7 @@ var init = function () {
         worldMatrix
     );
 
-    gl.uniformMatrix4fv( // Basically sending data to the GPU
-        matViewUniformLocation,
-        gl.FALSE, // Transpose karna a?
-        viewMatrix
-    );
+
 
     gl.uniformMatrix4fv( // Basically sending data to the GPU
         matProjectionUniformLocation,
@@ -236,7 +239,13 @@ var init = function () {
     var identityMatrix = new Float32Array(16);
     mat4.identity(identityMatrix);
     var loop = function () {
-        mat4.rotate(worldMatrix, identityMatrix, rotationAngle++/30, [1, 1, 1]); // rotating the world matrix about identity matrix, about x, y, and z axis
+        mat4.lookAt(viewMatrix, [x, y, z], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0]); // output variable, eye location, center, up axis
+        gl.uniformMatrix4fv( // Basically sending data to the GPU
+            matViewUniformLocation,
+            gl.FALSE, // Transpose karna a?
+            viewMatrix
+        );
+        mat4.rotate(worldMatrix, identityMatrix, rotationAngle++/30, [0, 0, 0]); // rotating the world matrix about identity matrix, about x, y, and z axis
         gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix); // Send updates values to the GPU
         gl.clearColor(0.6, 0.6, 0.6, 1.0); // RGBA
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // color Buffer & depth buffer
@@ -285,3 +294,32 @@ var createProgram = function (gl, vertexShader, fragmentShader) {
         gl.deleteProgram(program);
     }
 };
+
+var moveCamera = function (key) {
+    if(key.keyCode == '119'){ // w
+        z-=0.5;
+    }
+    if(key.keyCode == '97'){ // a
+        x-=0.5;
+    }
+    if(key.keyCode == '115'){ // s
+        z+=0.5;
+    }
+    if(key.keyCode == '100'){ // d
+        x+=0.5;
+    }
+};
+
+var getMouseCoordinates = function (event) {
+    mouseXPosition = event.clientX/2;
+    mouseYPosition = event.clientY/2;
+    console.log(mouseXPosition);
+    console.log(mouseYPosition);
+};
+
+
+
+// Register Events
+window.addEventListener('keypress', moveCamera, false);
+canvas.addEventListener('mousemove', getMouseCoordinates);
+
